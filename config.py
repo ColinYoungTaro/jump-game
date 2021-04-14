@@ -1,5 +1,3 @@
-from pygame.transform import threshold
-
 
 width = 480
 height = 320
