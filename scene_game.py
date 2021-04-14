@@ -59,8 +59,8 @@ class GameMap(gameObject):
         self.h = 600
 
         # 加入地板
-        self.ground.append(Block(300,200,0,0))
-        self.ground.append(Block(200,250,350,0))
+        self.ground.append(Block(200,50,0,0))
+        self.ground.append(Block(220,40,230,0))
 
         # sprite的image，rect属性补全，用于绘图和坐标确定
         self.image = Surface([self.w,self.h])
@@ -89,8 +89,13 @@ class SceneGame(Scene):
         for block in self.map.get_all_floor():
             self.sprite_group.add(block)
 
+    def bind(self,vector):
+        if vector.x > int(config.width / 2):
+            self.offset.x = vector.x - int(config.width / 2)
+
     def update(self):
         # self.offset.x += 1.2
+        self.bind(self.actor.pos)
         self.sprite_group.update()
         for floor in self.map.get_all_floor():
             floor.show(self.offset)
@@ -115,16 +120,14 @@ class SceneGame(Scene):
 
     def event(self, events):
         # 需要持续监测的cmd
-        cmds = self.input_handler.update()
-        if cmds:
-            for cmd in cmds:
-                self.actor_state_machine.handle_command(cmd)
+        cmd = self.input_handler.update()
+        if cmd:
+            self.actor_state_machine.handle_command(cmd)
 
         # 需要监测触发信号的cmd
         for event in events:
             if event.type == KEYDOWN:
-                cmds = self.input_handler.handle_input(event.key)
-                if cmds is not None:
-                    for cmd in cmds:
-                        self.actor_state_machine.handle_command(cmd)
+                cmd = self.input_handler.handle_input(event.key)
+                if cmd is not None:
+                    self.actor_state_machine.handle_command(cmd)
     

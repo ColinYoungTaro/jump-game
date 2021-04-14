@@ -1,8 +1,8 @@
 from pygame.transform import threshold
 
 
-width = 800
-height = 600
+width = 480
+height = 320
 grid_width = 10
 gravity = 0.3
 

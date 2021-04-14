@@ -69,8 +69,9 @@ class ActorInputHandler(InputHandler):
 
     def update(self):
         # 持续监测
-        cmd_list = []
+        '''
         try:
+             
             data = self.stream.read(AudioConfig.CHUNK,exception_on_overflow = False)
             self.audio_data = np.fromstring(data, dtype=np.short)
             # print(self.audio_data[len(self.audio_data)-1])
@@ -80,18 +81,18 @@ class ActorInputHandler(InputHandler):
 
 
             if average_volumn > volumn_threshold["high"]:
-                cmd_list.append(JumpCommand((average_volumn-volumn_threshold["high"])/400)) 
+                return JumpCommand((average_volumn-volumn_threshold["high"])/400) 
             elif average_volumn > volumn_threshold["low"]:
-                cmd_list.append(MoveCommand(1.5,0)) 
+                return MoveCommand(1.5,0) 
 
         except Exception as e:
             print(e)
-
-        return cmd_list
-        # key_list = get_pressed()
+            return None
         '''
+        key_list = get_pressed()
+
         if key_list[K_RIGHT] :
             return MoveCommand(1,0)
         elif key_list[K_LEFT]:
             return MoveCommand(-1,0)
-        ''' 
+        

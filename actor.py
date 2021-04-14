@@ -21,7 +21,7 @@ class Actor(gameObject):
         self.image.set_colorkey((0,0,0))
         # 主体图像 
         # TODO:可以用图像替代
-        circle(self.image,COLOR_DARK,center=(15,15),radius=15)
+        circle(self.image,COLOR_DARK,(15,15),15)
         self.rect = self.image.get_rect()
 
     def show(self,offset=Vector2(0,0)):
