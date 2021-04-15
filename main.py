@@ -1,24 +1,14 @@
+from singleton import Singleton
 from scene_title import SceneTitle
 from base.mscene import Scene
-from base.task import Task, TaskQue
+from base.task import GameTaskQue, Task
 import pygame
-from pygame import scrap
+from pygame import Surface, scrap
 from pygame.time import Clock
 from pygame.locals import *
 from scene_game import SceneGame
 
-import config
-
-class SceneTransitionTask(Task):
-    def __init__(self,scene,next) -> None:
-        super().__init__()
-        self.scene : Scene = scene
-        self.next : Scene = next
-        
-    def execute(self):
-        self.scene.dispose()
-        self.scene = next
-        self.finish()
+import config  
 class Game:
     # 初始化
     def __init__(self):
@@ -36,18 +26,32 @@ class Game:
         # 当前的场景
         self.scene = SceneTitle()
         # 任务队列，用来处理游戏所需自定义的一些任务
-        self.task_que = TaskQue()
+        self.task_que = GameTaskQue(self)
+
+        Singleton.get_instance().bind_global_task_que(task_que=self.task_que)
+        # self.task_que.push(SceneTransitionTask())
         # 创建精灵组
         self.group = pygame.sprite.Group()
 
+        self.transition_layer = Surface((config.width,config.height))
+        self.transition_layer.fill((0,0,0))
+        self.transition_layer.set_alpha(0)
+
+    
+
     # 更新模块，完成游戏每一帧的更新
+    
+    def get_transition_layer(self):
+        return self.transition_layer
+
     def update(self):
         # 更新任务和场景
-        scene = self.scene.update()
-        if scene and self.scene is not scene:
-            print(scene)
-            self.scene.dispose()
-            self.scene = scene
+        self.scene.update()
+        self.task_que.update()
+
+    def change_scene(self,next):
+        self.scene.dispose()
+        self.scene = next
 
     # 绘图模块
     def draw(self):
@@ -56,6 +60,7 @@ class Game:
         surface = self.scene.show(self.screen)
         if surface:
             self.screen.blit(surface,Rect(-self.scene.offset.x,self.scene.offset.y,config.width,config.height))
+        self.screen.blit(self.transition_layer,(0,0))
         # 更新屏幕
         # 控制fps
         self.clock.tick(self.fps)

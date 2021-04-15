@@ -75,7 +75,7 @@ class ButtonManager:
             btn.show()
 
     def select_next(self):
-        if self.select_id < len(self.btn_list):
+        if self.select_id < len(self.btn_list) - 1:
             self.select_id += 1 
     
     def select_prev(self):

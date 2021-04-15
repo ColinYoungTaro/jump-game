@@ -9,6 +9,9 @@ class Task:
     def finish(self):
         self.is_finish = True
 
+
+
+
 class TaskQue:
     def __init__(self) -> None:
         # 初始化任务队列
@@ -32,3 +35,10 @@ class TaskQue:
         for task in self.task_que:
             if task.is_finish:
                 self.task_que.remove(task)
+
+
+
+class GameTaskQue(TaskQue):
+    def __init__(self,game) -> None:
+        super().__init__()
+        self.control_game = game

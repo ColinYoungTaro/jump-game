@@ -1,4 +1,5 @@
 
+from singleton import Singleton
 from scene_game import SceneGame
 from pygame import surface
 from base.button import Button, ButtonManager
@@ -28,11 +29,10 @@ class SceneTitle(Scene):
             self.sprite_group.add(btn)
 
     def change_scene(self,scene):
-        self.next_scene = scene
+        Singleton.get_instance().start_transition(scene)
+
     def update(self):
         import scene_game
-        if self is not self.next_scene:
-            return self.next_scene
         self.btn_manager.refresh()
         self.sprite_group.update()
 
