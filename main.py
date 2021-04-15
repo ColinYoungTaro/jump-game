@@ -1,11 +1,24 @@
+from scene_title import SceneTitle
+from base.mscene import Scene
+from base.task import Task, TaskQue
 import pygame
 from pygame import scrap
 from pygame.time import Clock
 from pygame.locals import *
 from scene_game import SceneGame
-from base.task import TaskQue
+
 import config
 
+class SceneTransitionTask(Task):
+    def __init__(self,scene,next) -> None:
+        super().__init__()
+        self.scene : Scene = scene
+        self.next : Scene = next
+        
+    def execute(self):
+        self.scene.dispose()
+        self.scene = next
+        self.finish()
 class Game:
     # 初始化
     def __init__(self):
@@ -21,7 +34,7 @@ class Game:
         # 程序的屏幕Surface对象
         self.screen = pygame.display.set_mode(self.size)
         # 当前的场景
-        self.scene = SceneGame()
+        self.scene = SceneTitle()
         # 任务队列，用来处理游戏所需自定义的一些任务
         self.task_que = TaskQue()
         # 创建精灵组
@@ -30,14 +43,19 @@ class Game:
     # 更新模块，完成游戏每一帧的更新
     def update(self):
         # 更新任务和场景
-        self.task_que.update()
-        self.scene.update()
+        scene = self.scene.update()
+        if scene and self.scene is not scene:
+            print(scene)
+            self.scene.dispose()
+            self.scene = scene
 
     # 绘图模块
     def draw(self):
         # 清屏
-        self.screen.fill((255,255,255))
-        self.scene.show(self.screen)
+        self.screen.fill((60,120,170))
+        surface = self.scene.show(self.screen)
+        if surface:
+            self.screen.blit(surface,Rect(-self.scene.offset.x,self.scene.offset.y,config.width,config.height))
         # 更新屏幕
         # 控制fps
         self.clock.tick(self.fps)

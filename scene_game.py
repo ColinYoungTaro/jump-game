@@ -9,6 +9,7 @@ from base.game_object import gameObject
 import pygame
 from base.mscene import Scene
 import config
+import scene_title
 
 COLOR_BLACK = (0,0,0)
 COLOR_WHITE = (255,255,255)
@@ -34,8 +35,8 @@ class Block(gameObject):
         return "w:{0},h:{1},x:{2},y:{3}".format(self.w,self.h,self.pos.x,self.pos.y)
 
     # 更改显示位置，根据Scene传入的offset
-    def show(self,offset):
-        self.rect.x = -offset.x+self.pos.x
+    def show(self):
+        self.rect.x = self.pos.x
         self.rect.y = config.height-self.pos.y-self.h
 
     # 获取平台的地面坐标
@@ -73,12 +74,13 @@ class GameMap(gameObject):
 
 # 游戏场景
 class SceneGame(Scene):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self,w=2000,h=320) -> None:
+        super().__init__(w,h)
+        # self.surface = Surface((w,h))
         self.gravity = pygame.Vector2(0,-config.gravity)
         self.map = GameMap()
         # 地图的坐标偏移量
-        self.offset = pygame.Vector2(0,0)
+
         self.actor = Actor()
         self.actor.set_pos(0,300)
         self.sprite_group = sprite.Group()
@@ -98,13 +100,20 @@ class SceneGame(Scene):
         self.bind(self.actor.pos)
         self.sprite_group.update()
         for floor in self.map.get_all_floor():
-            floor.show(self.offset)
-        self.actor.show(self.offset)
+            floor.show()
+        self.actor.show()
         self.actor_state_machine.refresh()
 
 
-    def show(self,screen):
-        self.sprite_group.draw(screen)
+    def show(self,screen:Surface):
+        self.surface.fill((255,255,255))
+        self.sprite_group.draw(self.surface)
+        return self.surface
+        # screen.
+        
+
+    def get_offset(self):
+        return self.offset
 
     def physics(self):
         # 判断落地

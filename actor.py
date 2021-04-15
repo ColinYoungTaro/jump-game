@@ -24,8 +24,8 @@ class Actor(gameObject):
         circle(self.image,COLOR_DARK,(15,15),15)
         self.rect = self.image.get_rect()
 
-    def show(self,offset=Vector2(0,0)):
-        self.rect.x = self.pos.x-offset.x
+    def show(self):
+        self.rect.x = self.pos.x
         self.rect.y = config.height-self.pos.y-30
 
     def physics(self,gravity):

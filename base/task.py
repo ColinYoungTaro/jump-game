@@ -3,9 +3,6 @@ class Task:
         self.is_finish = False
         pass
 
-    def add_observer(self,observer):
-        pass 
-
     def execute(self):
         pass 
 
