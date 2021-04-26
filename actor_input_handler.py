@@ -93,7 +93,7 @@ class ActorInputHandler(InputHandler):
         key_list = get_pressed()
 
         if key_list[K_RIGHT] :
-            return MoveCommand(1,0)
+            return MoveCommand(5,0)
         elif key_list[K_LEFT]:
-            return MoveCommand(-1,0)
+            return MoveCommand(-5,0)
         

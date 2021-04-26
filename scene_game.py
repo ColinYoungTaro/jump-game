@@ -1,3 +1,4 @@
+from singleton import Singleton
 from actor_state import ActorStateMachine
 from actor_input_handler import ActorInputHandler
 from pygame.constants import KEYDOWN
@@ -61,7 +62,7 @@ class GameMap(gameObject):
 
         # 加入地板
         self.ground.append(Block(200,50,0,0))
-        self.ground.append(Block(220,40,230,0))
+        self.ground.append(Block(220,40,280,0))
 
         # sprite的image，rect属性补全，用于绘图和坐标确定
         self.image = Surface([self.w,self.h])
@@ -97,6 +98,7 @@ class SceneGame(Scene):
 
     def update(self):
         # self.offset.x += 1.2
+        super().update()
         self.bind(self.actor.pos)
         self.sprite_group.update()
         for floor in self.map.get_all_floor():
@@ -126,6 +128,9 @@ class SceneGame(Scene):
             self.actor.is_grounded = False
                     
         self.actor.physics(Vector2(0,-config.gravity))
+
+        if self.actor.pos.y < -100:
+            Singleton.get_instance().start_transition(scene_title.SceneTitle())
 
     def event(self, events):
         # 需要持续监测的cmd

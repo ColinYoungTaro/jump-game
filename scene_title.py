@@ -1,4 +1,5 @@
 
+from pygame.display import update
 from singleton import Singleton
 from scene_game import SceneGame
 from pygame import surface
@@ -20,7 +21,7 @@ class SceneTitle(Scene):
 
         self.btn_manager.add_buttons([
             Button("start game",COLOR_DEFAULT,"start_game",COLOR_SELECTED,call_back=lambda:self.change_scene(SceneGame())),
-            Button("exit game",COLOR_DEFAULT,"exit_game",COLOR_SELECTED)
+            Button("exit game",COLOR_DEFAULT,"exit_game",COLOR_SELECTED,call_back=lambda:self.change_scene(None))
         ])
         self.btn_manager.set_pos(240,160)
         self.next_scene = self
@@ -28,10 +29,13 @@ class SceneTitle(Scene):
         for btn in self.btn_manager.get_btns():
             self.sprite_group.add(btn)
 
+        # self.show()
+
     def change_scene(self,scene):
         Singleton.get_instance().start_transition(scene)
 
     def update(self):
+        super().update()
         import scene_game
         self.btn_manager.refresh()
         self.sprite_group.update()

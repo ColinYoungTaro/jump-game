@@ -12,6 +12,7 @@ class Scene():
         self.offset = pygame.Vector2(0,0)
         self.task_que = TaskQue()
         self.surface = Surface((x,y))
+        self.enabled = True
     
     def post_task(self,task):
         self.task_que.push(task)
@@ -23,9 +24,17 @@ class Scene():
         pass
 
     def update(self):
-        self.task_que.update()
+        pass 
+        #　self.task_que.update()
 
     def dispose(self):
         pass 
+    
+    def disable(self):
+        self.enabled = False
+    
+    def enable(self):
+        self.enabled = True
 
-
+    def is_enable(self):
+        return self.enabled

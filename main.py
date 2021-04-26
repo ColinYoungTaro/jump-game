@@ -45,7 +45,8 @@ class Game:
 
     def update(self):
         # 更新任务和场景
-        self.scene.update()
+        if self.scene.is_enable():
+            self.scene.update()
         self.task_que.update()
 
     def change_scene(self,next):
@@ -67,14 +68,16 @@ class Game:
     
     # 物理模块
     def physics(self):
-        self.scene.physics()
+        if self.scene.is_enable():
+            self.scene.physics()
         pass 
 
     # 默认的事件处理模块
     def event(self):
         events = pygame.event.get()
         # 将所有事件传递给场景对象进行处理
-        self.scene.event(events)
+        if self.scene.is_enable():
+            self.scene.event(events)
         # 在框架最外层处理整个框架应该处理的任务
         for event in events:
             if event.type == KEYDOWN:
