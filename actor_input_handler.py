@@ -5,7 +5,7 @@ from pygame.constants import K_LEFT, K_RIGHT, K_SPACE
 from pygame.key import get_pressed
 from base.command import InputHandler,Command
 import random
-import pyaudio
+#import pyaudio
 import numpy as np
 from config import volumn_threshold,volumn_max
 
@@ -33,6 +33,7 @@ class MoveCommand(Command):
     def execute(self, ctrl_obj):
         actor = ctrl_obj
         actor.pos += Vector2(self.x,self.y)
+'''
 
 class AudioConfig:
     CHUNK = 256
@@ -42,7 +43,7 @@ class AudioConfig:
     RECORD_SECONDS = 0.1
     WAVE_OUTPUT_FILENAME = "cache.wav"
 
-
+''' 
 """sumary_line
     input_handler:处理输入
 """
@@ -51,7 +52,7 @@ class ActorInputHandler(InputHandler):
     def __init__(self) -> None:
         super().__init__()
         self.audio_frames = []
-
+        '''
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(
             format=AudioConfig.FORMAT,
@@ -60,7 +61,7 @@ class ActorInputHandler(InputHandler):
             input=True,
             frames_per_buffer=AudioConfig.CHUNK
         )
-        
+        '''
 
     def handle_input(self, key):
         if key == K_SPACE:

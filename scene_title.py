@@ -46,9 +46,6 @@ class SceneTitle(Scene):
         self.sprite_group.draw(self.surface)
         return self.surface
 
-    def select(self):
-        self.select = True
-
     def event(self, events):
         for event in events:
             if event.type == KEYDOWN:

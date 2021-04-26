@@ -1,3 +1,4 @@
+from actor import Actor
 from actor_input_handler import JumpCommand, MoveCommand
 from base.state import State,StateMachine
 
@@ -10,11 +11,9 @@ class MovableState(State):
 
 # 跳起来的状态，继承了可移动的状态
 class JumpState(MovableState):
-
-    def refresh(self,actor):
+    def refresh(self,actor:Actor):
         if actor.is_grounded:
             return GroundedState()
-        return None
 
 
 # 在地面上的状态，继承了可移动的状态

@@ -27,8 +27,8 @@ class SceneTransitionTask(Task):
         self.game.get_transition_layer().set_alpha(self.alpha)
         
         
-
-
+# 全局控制器，单例模式，从Game框架中单独拿出来
+# 负责各个游戏对象之间实现一些全局的操作，比如调用场景转换
 class Singleton:
     def __init__(self) -> None:
         self.tasks = None

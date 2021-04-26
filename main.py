@@ -3,10 +3,9 @@ from scene_title import SceneTitle
 from base.mscene import Scene
 from base.task import GameTaskQue, Task
 import pygame
-from pygame import Surface, scrap
+from pygame import Surface
 from pygame.time import Clock
 from pygame.locals import *
-from scene_game import SceneGame
 
 import config  
 class Game:
