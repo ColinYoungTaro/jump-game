@@ -6,10 +6,11 @@ import pygame
 from pygame import Surface
 from pygame.time import Clock
 from pygame.locals import *
+from scene_game import SceneGame
 
 import config  
 class Game:
-    # 初始化
+
     def __init__(self):
         # 初始化模块
         pygame.init()
@@ -23,7 +24,7 @@ class Game:
         # 程序的屏幕Surface对象
         self.screen = pygame.display.set_mode(self.size)
         # 当前的场景
-        self.scene = SceneTitle()
+        self.scene = SceneGame()
         # 任务队列，用来处理游戏所需自定义的一些任务
         self.task_que = GameTaskQue(self)
 

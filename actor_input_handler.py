@@ -100,7 +100,12 @@ class ActorInputHandler(InputHandler):
         
 class AudioInputHandler(InputHandler):
     def update(self):
-        vol = messure(5)
+        vol = messure(1)
         # print(vol)
-        if vol>0.0001:
-            return MoveCommand(1,0)
+        # print(vol)
+        if vol<0.05:
+            return
+        elif vol<0.15:
+            return MoveCommand(2,0)
+        else:
+            return [JumpCommand(),MoveCommand(2,0)]

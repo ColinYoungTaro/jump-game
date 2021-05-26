@@ -62,7 +62,8 @@ class GameMap(gameObject):
 
         # 加入地板
         self.ground.append(Block(200,50,0,0))
-        self.ground.append(Block(220,40,280,0))
+        self.ground.append(Block(220,40,260,0))
+        self.ground.append(Block(10000,50,500,0))
 
         # sprite的image，rect属性补全，用于绘图和坐标确定
         self.image = Surface([self.w,self.h])
@@ -72,6 +73,10 @@ class GameMap(gameObject):
     # 返回地面物体的列表用于碰撞检测
     def get_all_floor(self):
         return self.ground
+
+    def add_block(self,w,h,x,y):
+        self.ground.append(Block(w,h,x,y))
+
 
 # 游戏场景
 class SceneGame(Scene):
@@ -136,12 +141,23 @@ class SceneGame(Scene):
         # 需要持续监测的cmd
         cmd = self.input_handler.update()
         if cmd:
-            self.actor_state_machine.handle_command(cmd)
+            try:
+                if isinstance(cmd,Command):
+                    self.actor_state_machine.handle_command(cmd)
+                else:
+                    for c in cmd:
+                        self.actor_state_machine.handle_command(c)
+            except:
+                import traceback;
+                traceback.print_exc()
+        else:
+            # cmd is null 
+            self.actor.set_vx(0)
 
         # 需要监测触发信号的cmd
         for event in events:
             if event.type == KEYDOWN:
-                cmd = self.input_handler.handle_input(event.key)
+                # cmd = self.input_handler.handle_input(event.key)
                 if cmd is not None:
                     self.actor_state_machine.handle_command(cmd)
     
