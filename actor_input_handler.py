@@ -4,6 +4,7 @@ from pygame import key
 from pygame.constants import K_LEFT, K_RIGHT, K_SPACE
 from pygame.key import get_pressed
 from base.command import InputHandler,Command
+from volume import messure
 import random
 #import pyaudio
 import numpy as np
@@ -97,3 +98,9 @@ class ActorInputHandler(InputHandler):
         elif key_list[K_LEFT]:
             return MoveCommand(-5,0)
         
+class AudioInputHandler(InputHandler):
+    def update(self):
+        vol = messure(5)
+        # print(vol)
+        if vol>0.0001:
+            return MoveCommand(1,0)

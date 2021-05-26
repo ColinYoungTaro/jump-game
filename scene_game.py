@@ -1,6 +1,6 @@
 from singleton import Singleton
 from actor_state import ActorStateMachine
-from actor_input_handler import ActorInputHandler
+from actor_input_handler import ActorInputHandler, AudioInputHandler
 from pygame.constants import KEYDOWN
 from base.command import Command
 from pygame.event import post
@@ -85,7 +85,7 @@ class SceneGame(Scene):
         self.actor = Actor()
         self.actor.set_pos(0,300)
         self.sprite_group = sprite.Group()
-        self.input_handler = ActorInputHandler()
+        self.input_handler = AudioInputHandler()
         self.actor_state_machine = ActorStateMachine(self.actor)
 
         self.sprite_group.add(self.actor)
