@@ -1,3 +1,4 @@
+from key import PORT, query_key
 from singleton import Singleton
 from actor_state import ActorStateMachine
 from actor_input_handler import ActorInputHandler, AudioInputHandler
@@ -11,6 +12,7 @@ import pygame
 from base.mscene import Scene
 import config
 import scene_title
+import map
 
 COLOR_BLACK = (0,0,0)
 COLOR_WHITE = (255,255,255)
@@ -61,9 +63,10 @@ class GameMap(gameObject):
         self.h = 600
 
         # 加入地板
-        self.ground.append(Block(200,50,0,0))
-        self.ground.append(Block(220,40,260,0))
-        self.ground.append(Block(10000,50,500,0))
+
+        Map_block = map.create_Map(5000,5)
+        for block in Map_block:
+            self.add_block(block[0],block[1],block[2],block[3])
 
         # sprite的image，rect属性补全，用于绘图和坐标确定
         self.image = Surface([self.w,self.h])
@@ -99,7 +102,7 @@ class SceneGame(Scene):
 
     def bind(self,vector):
         if vector.x > int(config.width / 2):
-            self.offset.x = vector.x - int(config.width / 2)
+            self.offset.x = vector.x -  int(config.width / 2)
 
     def update(self):
         # self.offset.x += 1.2
@@ -110,6 +113,9 @@ class SceneGame(Scene):
             floor.show()
         self.actor.show()
         self.actor_state_machine.refresh()
+        key = query_key()
+        if key == PORT.ESC:
+            Singleton.get_instance().start_transition(scene_title.SceneTitle())
 
 
     def show(self,screen:Surface):
@@ -157,7 +163,7 @@ class SceneGame(Scene):
         # 需要监测触发信号的cmd
         for event in events:
             if event.type == KEYDOWN:
-                # cmd = self.input_handler.handle_input(event.key)
+                cmd = self.input_handler.handle_input(event.key)
                 if cmd is not None:
                     self.actor_state_machine.handle_command(cmd)
     

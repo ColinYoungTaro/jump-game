@@ -22,7 +22,7 @@ class SceneTitle(Scene):
 
         self.btn_manager.add_buttons([
             Button("start game",COLOR_DEFAULT,"start_game",COLOR_SELECTED,call_back=lambda:self.change_scene(SceneGame())),
-            Button("exit game",COLOR_DEFAULT,"exit_game",COLOR_SELECTED,call_back=lambda:self.change_scene(None))
+            Button("exit game",COLOR_DEFAULT,"exit_game",COLOR_SELECTED,call_back=lambda:exit(0))
         ])
         self.btn_manager.set_pos(240,160)
         self.next_scene = self
@@ -43,7 +43,7 @@ class SceneTitle(Scene):
         key = query_key()
         if not key:
             return 
-        print(key)
+        # print(key)
         if key == PORT.UP:
             self.btn_manager.select_prev()
         elif key == PORT.DOWN:

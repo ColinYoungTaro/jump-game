@@ -9,6 +9,7 @@ import random
 #import pyaudio
 import numpy as np
 from config import volumn_threshold,volumn_max
+import math
 
 """sumary_line
     定义命令对象
@@ -17,7 +18,7 @@ from config import volumn_threshold,volumn_max
 
 # jumpCommand：跳跃的命令
 class JumpCommand(Command):
-    def __init__(self,force=10):
+    def __init__(self,force = 10):
         self.force = force
         super().__init__()
 
@@ -103,9 +104,9 @@ class AudioInputHandler(InputHandler):
         vol = messure(1)
         # print(vol)
         # print(vol)
-        if vol<0.05:
+        if vol<0.011:
             return
         elif vol<0.15:
             return MoveCommand(2,0)
         else:
-            return [JumpCommand(),MoveCommand(2,0)]
+            return [JumpCommand(70*math.sqrt(vol - 0.15)),MoveCommand(2,0)]

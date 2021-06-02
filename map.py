@@ -7,8 +7,8 @@ def create_Map(length, level):
     y = 0
     width = 100
     while (x + width) < length:
-        d = level * 10 + int(10 * rdm.random())
-        width = 100 - 10 * level + int((100 - level * 5) * rdm.random())
+        d = level * 10 + int(100 * rdm.random())
+        width = 200 - 10 * level + int((100 - level * 5) * rdm.random())
         height = 40+ int(20*rdm.random())
         x = Map[len(Map)-1][2] + d + Map[len(Map)-1][0]
         block = [width, height, x, y]
