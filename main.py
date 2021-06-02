@@ -1,3 +1,4 @@
+from key import init_keys
 from singleton import Singleton
 from scene_title import SceneTitle
 from base.mscene import Scene
@@ -24,7 +25,7 @@ class Game:
         # 程序的屏幕Surface对象
         self.screen = pygame.display.set_mode(self.size)
         # 当前的场景
-        self.scene = SceneGame()
+        self.scene = SceneTitle()
         # 任务队列，用来处理游戏所需自定义的一些任务
         self.task_que = GameTaskQue(self)
 
@@ -110,5 +111,6 @@ def main():
 
 
 if __name__ == '__main__':
+    init_keys()
     main()
 

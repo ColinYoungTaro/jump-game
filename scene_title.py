@@ -1,4 +1,5 @@
 
+from key import PORT, query_key
 from pygame.display import update
 from singleton import Singleton
 from scene_game import SceneGame
@@ -39,6 +40,17 @@ class SceneTitle(Scene):
         import scene_game
         self.btn_manager.refresh()
         self.sprite_group.update()
+        key = query_key()
+        if not key:
+            return 
+        print(key)
+        if key == PORT.UP:
+            self.btn_manager.select_prev()
+        elif key == PORT.DOWN:
+            self.btn_manager.select_next()
+        elif key == PORT.ENTER:
+            self.btn_manager.click()
+
 
     def handle_input(self):
         pass 
