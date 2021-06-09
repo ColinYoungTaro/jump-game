@@ -9,6 +9,12 @@ volumn_threshold = {
     "high" : 800
 }
 
+animation_frame = {
+    "idle" : (6,11),
+    "run" : (0,5),
+    "jump" : (5,5)
+}
+
 volumn_max = 20000
 
 stages = [

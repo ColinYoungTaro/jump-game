@@ -14,6 +14,4 @@ class InputHandler:
         pass 
     
     def handle_input(self,key):
-        if key.key == K_SPACE:
-            print("space down") 
-            return Command()
+        pass

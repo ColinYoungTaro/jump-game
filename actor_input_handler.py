@@ -19,7 +19,7 @@ import math
 # jumpCommand：跳跃的命令
 class JumpCommand(Command):
     def __init__(self,force = 10):
-        self.force = force
+        self.force = min(force,12)
         super().__init__()
 
     def execute(self,actor):
@@ -109,4 +109,4 @@ class AudioInputHandler(InputHandler):
         elif vol<0.15:
             return MoveCommand(2,0)
         else:
-            return [JumpCommand(70*math.sqrt(vol - 0.15)),MoveCommand(2,0)]
+            return [JumpCommand(50*math.sqrt(vol - 0.15)),MoveCommand(2,0)]

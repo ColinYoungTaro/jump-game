@@ -19,7 +19,7 @@ class Button(gameObject):
         self.color_default = color_default
         self.color_select = color_select if color_select is not None else color_default
 
-        self.font = font if font is not None else SysFont("宋体", 25, bold=True, italic=False)
+        self.font = font if font is not None else SysFont("宋体", 60, bold=True, italic=False)
 
         self.image = self.font.render(self.context_default, True, (0xee,0xee,0xee))
         self.on_click = call_back

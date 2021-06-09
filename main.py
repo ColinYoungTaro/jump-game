@@ -11,7 +11,7 @@ from scene_game import SceneGame
 
 import config  
 class Game:
-
+    # 初始化
     def __init__(self):
         # 初始化模块
         pygame.init()
@@ -23,7 +23,7 @@ class Game:
         self.fps = 60
         self.clock = Clock()
         # 程序的屏幕Surface对象
-        self.screen = pygame.display.set_mode(self.size)
+        self.screen = pygame.display.set_mode(self.size,pygame.FULLSCREEN)
         # 当前的场景
         self.scene = SceneTitle()
         # 任务队列，用来处理游戏所需自定义的一些任务
@@ -82,10 +82,10 @@ class Game:
             self.scene.event(events)
         # 在框架最外层处理整个框架应该处理的任务
         for event in events:
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     self.exit()
-            elif event.type == QUIT:
+            elif event.type == pygame.QUIT:
                 self.exit()
 
     def tasks(self):
@@ -107,10 +107,10 @@ class Game:
            
 def main():
     game = Game()
+    init_keys()
     game.run()
 
 
 if __name__ == '__main__':
-    init_keys()
     main()
 

@@ -1,3 +1,4 @@
+from base.animation import Animation
 from pygame import Rect, Vector2
 from pygame.draw import circle, rect
 import pygame
@@ -6,7 +7,7 @@ from base.game_object import gameObject
 import config
 from base.state import State,StateMachine
 
-COLOR_DARK = (255,0,0)
+COLOR_RED = (255,0,0)
 
 class Actor(gameObject):
     # 初始化相关状态
@@ -16,12 +17,16 @@ class Actor(gameObject):
         self.is_grounded = False
         # 判定任务的速度
         self.velocity = Vector2(0,0)
-        # sprite相关
-        self.image = pygame.Surface([30,30])
-        self.image.set_colorkey((0,0,0))
-        # 主体图像 
-        # TODO:可以用图像替代
-        circle(self.image,COLOR_DARK,(15,15),15)
+        # # sprite相关
+        # self.image = pygame.Surface([30,30])
+        # self.image.set_colorkey((0,0,0))
+        # # 主体图像 
+        # # TODO:可以用图像替代
+        # circle(self.image,COLOR_RED,(15,15),15)
+        
+        self.animation = Animation()
+        self.animation.set_state("idle")
+        self.image = self.animation.get_sprite()
         self.rect = self.image.get_rect()
 
     def show(self):
@@ -49,7 +54,7 @@ class Actor(gameObject):
 
     # 落地时候的回调函数
     def on_ground(self):
-        print("grounded")
+        # print("grounded")
         self.is_grounded = True
         self.velocity = Vector2(0,0)
         

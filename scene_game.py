@@ -64,7 +64,7 @@ class GameMap(gameObject):
 
         # 加入地板
 
-        Map_block = map.create_Map(5000,5)
+        Map_block = map.create_Map(20000,5)
         for block in Map_block:
             self.add_block(block[0],block[1],block[2],block[3])
 
