@@ -1,10 +1,13 @@
 
+from singleton import Singleton
 from pygame import Vector2
 from pygame import key
 from pygame.constants import K_LEFT, K_RIGHT, K_SPACE
 from pygame.key import get_pressed
 from base.command import InputHandler,Command
 from volume import messure
+import threading
+import time
 import random
 #import pyaudio
 import numpy as np
@@ -98,15 +101,42 @@ class ActorInputHandler(InputHandler):
             return MoveCommand(5,0)
         elif key_list[K_LEFT]:
             return MoveCommand(-5,0)
-        
+
+
+class AudioInputThread(threading.Thread):
+    def __init__(self):
+        super().__init__()
+        self.vol = 0
+        self.is_running = True
+
+    def run(self) -> None:
+        while self.is_running:
+            self.vol = messure(2)
+            Singleton.get_instance().set_volumn(self.vol)
+
+    def terminate(self):
+        self.is_running = False
+    
 class AudioInputHandler(InputHandler):
+    def __init__(self) -> None:
+        super().__init__()
+        self.vol = 0
+        self.audio_thread = AudioInputThread()
+        self.audio_thread.start()
+
+
     def update(self):
-        vol = messure(1)
-        # print(vol)
-        # print(vol)
-        if vol<0.011:
+
+        self.vol = Singleton.get_instance().get_volume()
+        
+        if self.vol<0.011:
             return
-        elif vol<0.15:
+        elif self.vol<0.15:
             return MoveCommand(2,0)
         else:
-            return [JumpCommand(50*math.sqrt(vol - 0.15)),MoveCommand(2,0)]
+            return [JumpCommand(50*math.sqrt(self.vol - 0.15)),MoveCommand(2,0)]
+
+    def dispose(self):
+        self.audio_thread.terminate()
+
+     

@@ -166,4 +166,7 @@ class SceneGame(Scene):
                 cmd = self.input_handler.handle_input(event.key)
                 if cmd is not None:
                     self.actor_state_machine.handle_command(cmd)
-    
+
+    def dispose(self):
+        super().dispose()
+        self.input_handler.dispose()

@@ -1,5 +1,7 @@
+import threading
 from base.mscene import Scene
 from base.task import GameTaskQue, Task, TaskQue
+from volume import messure
 
 class SceneTransitionTask(Task):
     def __init__(self,game,next_scene:Scene) -> None:
@@ -33,19 +35,36 @@ class SceneTransitionTask(Task):
         
 # 全局控制器，单例模式，从Game框架中单独拿出来
 # 负责各个游戏对象之间实现一些全局的操作，比如调用场景转换
+lock = threading.Lock()
+    
 class Singleton:
 
     def __init__(self) -> None:
         self.tasks = None
-
+        self.audio_thread_lock = threading.Lock()
+        self.volume = 0  
+    
     # 绑定全局的任务队列
     def bind_global_task_que(self,task_que : GameTaskQue):
         assert(isinstance(task_que,GameTaskQue))
         self.tasks = task_que
-        print(self.tasks.control_game)
+        # print(self.tasks.control_game)
+
+    def get_volume(self):
+        lock.acquire()
+        vol = self.volume
+        lock.release()
+        return vol
+
+    def set_volumn(self,v):
+        lock.acquire()
+        self.volume = v
+        lock.release()
+
 
     def update(self):
         self.tasks.update()
+        self.volume = self.audio_thread.getval()
 
     def start_transition(self,next_scene):
         # if next_scene is None:
@@ -56,7 +75,8 @@ class Singleton:
         
     @staticmethod
     def get_instance():
+        lock.acquire()
         if not hasattr(Singleton,'instance') or Singleton.instance is None:
             Singleton.instance = Singleton()
-            
+        lock.release()
         return Singleton.instance

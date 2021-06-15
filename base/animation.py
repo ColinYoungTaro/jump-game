@@ -41,5 +41,7 @@ class Animation():
     def get_sprite(self):
         row = self.current // 5
         col = int(int(self.current) % 5)
-        return self.master_img.subsurface(col*self.frame_w,row*self.frame_h,self.frame_h,self.frame_h)
-        
+        surface = self.master_img.subsurface(col*self.frame_w,row*self.frame_h,self.frame_h,self.frame_h)
+        surface = pygame.transform.scale(surface, (100,100))
+        # surface = pygame.transform.flip(surface,xbool=True)
+        return surface

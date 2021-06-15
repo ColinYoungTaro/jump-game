@@ -18,20 +18,18 @@ class Actor(gameObject):
         # 判定任务的速度
         self.velocity = Vector2(0,0)
         # # sprite相关
-        # self.image = pygame.Surface([30,30])
-        # self.image.set_colorkey((0,0,0))
-        # # 主体图像 
-        # # TODO:可以用图像替代
-        # circle(self.image,COLOR_RED,(15,15),15)
-        
-        self.animation = Animation()
-        self.animation.set_state("idle")
-        self.image = self.animation.get_sprite()
+        self.image = pygame.Surface([30,30])
+        self.image.set_colorkey((0,0,0))
+        # 主体图像 
+        # TODO:可以用图像替代
+        circle(self.image,COLOR_RED,(15,15),15)
         self.rect = self.image.get_rect()
+        
+
 
     def show(self):
         self.rect.x = self.pos.x
-        self.rect.y = config.height-self.pos.y-30
+        self.rect.y = config.height-self.pos.y-self.rect.height
 
     def physics(self,gravity):
         self.pos += self.velocity

@@ -23,7 +23,8 @@ class Game:
         self.fps = 60
         self.clock = Clock()
         # 程序的屏幕Surface对象
-        self.screen = pygame.display.set_mode(self.size,pygame.FULLSCREEN)
+        # self.screen = pygame.display.set_mode(self.size,pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode(self.size)
         # 当前的场景
         self.scene = SceneTitle()
         # 任务队列，用来处理游戏所需自定义的一些任务
