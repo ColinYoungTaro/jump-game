@@ -23,6 +23,7 @@ class Actor(gameObject):
         # 主体图像 
         # TODO:可以用图像替代
         circle(self.image,COLOR_RED,(15,15),15)
+        circle(self.image,(255,255,255),(15+7,15-7),4)
         self.rect = self.image.get_rect()
         
 

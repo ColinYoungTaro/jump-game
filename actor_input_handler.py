@@ -111,7 +111,7 @@ class AudioInputThread(threading.Thread):
 
     def run(self) -> None:
         while self.is_running:
-            self.vol = messure(2)
+            self.vol = messure(1)
             Singleton.get_instance().set_volumn(self.vol)
 
     def terminate(self):
