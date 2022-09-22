@@ -3,16 +3,16 @@ class State:
         if name is not None:
             self.name = name 
 
-    def refresh(self):
+    def refresh(self, obj):
         pass 
 
-    def on_enter(self):
+    def on_enter(self, obj=None):
         pass 
 
-    def on_exit(self):
+    def on_exit(self, obj=None):
         pass 
 
-    def handle_command(self,cmd):
+    def handle_command(self, cmd, obj):
         pass
 
 

@@ -1,4 +1,6 @@
-from key import init_keys
+from SceneFactory import GameSceneFactory
+from handler.key_handler import SceneTitleOnEventWin
+
 from singleton import Singleton
 from scene_title import SceneTitle
 from base.mscene import Scene
@@ -7,7 +9,7 @@ import pygame
 from pygame import Surface
 from pygame.time import Clock
 from pygame.locals import *
-from scene_game import SceneGame
+import platform
 
 import config  
 class Game:
@@ -26,7 +28,7 @@ class Game:
         # self.screen = pygame.display.set_mode(self.size,pygame.FULLSCREEN)
         self.screen = pygame.display.set_mode(self.size)
         # 当前的场景
-        self.scene = SceneTitle()
+        self.scene = None 
         # 任务队列，用来处理游戏所需自定义的一些任务
         self.task_que = GameTaskQue(self)
 
@@ -39,10 +41,7 @@ class Game:
         self.transition_layer.fill((0,0,0))
         self.transition_layer.set_alpha(0)
 
-    
-
     # 更新模块，完成游戏每一帧的更新
-    
     def get_transition_layer(self):
         return self.transition_layer
 
@@ -53,7 +52,8 @@ class Game:
         self.task_que.update()
 
     def change_scene(self,next):
-        self.scene.dispose()
+        if self.scene:
+            self.scene.dispose()
         self.scene = next
 
     # 绘图模块
@@ -105,10 +105,15 @@ class Game:
             self.draw()
             self.event()
             self.tasks()
-           
+
+
+
 def main():
     game = Game()
-    init_keys()
+    start_scene = GameSceneFactory.getTitleScene()
+
+    game.change_scene(start_scene)
+
     game.run()
 
 

@@ -1,12 +1,9 @@
 
-from key import PORT, query_key
-from pygame.display import update
+from base.command import EventHandler, InputHandler, UpdateHandler
 from singleton import Singleton
 from scene_game import SceneGame
 from pygame import surface
 from base.button import Button, ButtonManager
-from pygame.constants import KEYDOWN, K_DOWN, K_KP_ENTER, K_RETURN, K_SPACE, K_UP
-from pygame.key import get_pressed
 import pygame.sprite
 from base.mscene import Scene
 
@@ -20,17 +17,17 @@ class SceneTitle(Scene):
         self.sprite_group = pygame.sprite.Group()
         self.btn_manager = ButtonManager()
 
-        self.btn_manager.add_buttons([
-            Button("start game",COLOR_DEFAULT,"start_game",COLOR_SELECTED,call_back=lambda:self.change_scene(SceneGame())),
-            Button("exit game",COLOR_DEFAULT,"exit_game",COLOR_SELECTED,call_back=lambda:exit(0))
-        ])
+        self.update_handler : UpdateHandler = None 
+        self.events_handler : EventHandler = None 
+
+        # self.show()
+    def add_buttons(self, buttons):
+        self.btn_manager.add_buttons(buttons)
         self.btn_manager.set_pos(240,160)
         self.next_scene = self
         
         for btn in self.btn_manager.get_btns():
             self.sprite_group.add(btn)
-
-        # self.show()
 
     def change_scene(self,scene):
         Singleton.get_instance().start_transition(scene)
@@ -40,17 +37,9 @@ class SceneTitle(Scene):
         import scene_game
         self.btn_manager.refresh()
         self.sprite_group.update()
-        key = query_key()
-        if not key:
-            return 
-        # print(key)
-        if key == PORT.UP:
-            self.btn_manager.select_prev()
-        elif key == PORT.DOWN:
-            self.btn_manager.select_next()
-        elif key == PORT.ENTER:
-            self.btn_manager.click()
 
+        if self.update_handler:
+            self.update_handler(self)
 
     def handle_input(self):
         pass 
@@ -63,12 +52,12 @@ class SceneTitle(Scene):
         return self.surface
 
     def event(self, events):
-        for event in events:
-            if event.type == KEYDOWN:
-                if event.key == K_UP:
-                    self.btn_manager.select_prev()
-                elif event.key == K_DOWN:
-                    self.btn_manager.select_next()
-                elif event.key == K_RETURN:
-                    self.btn_manager.click()
+        if self.events_handler:
+            self.events_handler(self, events)
+
     
+    def register_update_handler(self, handler : InputHandler):
+        self.update_handler = handler
+
+    def register_events_handler(self, handler : EventHandler):
+        self.events_handler = handler

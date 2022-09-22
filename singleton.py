@@ -1,7 +1,6 @@
 import threading
 from base.mscene import Scene
 from base.task import GameTaskQue, Task, TaskQue
-from volume import messure
 
 class SceneTransitionTask(Task):
     def __init__(self,game,next_scene:Scene) -> None:
@@ -10,7 +9,7 @@ class SceneTransitionTask(Task):
         self.alpha = 0
         self.mode = False
         self.next = next_scene
-        self.speed = 3
+        self.speed = 15
         # self.game.scene.disable()
         
         

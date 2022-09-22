@@ -1,7 +1,7 @@
-from key import PORT, query_key
+# from key import PORT, query_key
 from singleton import Singleton
 from actor_state import ActorStateMachine
-from actor_input_handler import ActorInputHandler, AudioInputHandler
+from actor_input_handler import ActorInputHandler
 from pygame.constants import KEYDOWN
 from base.command import Command
 from pygame.event import post
@@ -90,15 +90,18 @@ class SceneGame(Scene):
         self.map = GameMap()
         # 地图的坐标偏移量
 
+        self.on_fail = None 
+
         self.actor = Actor()
         self.actor.set_pos(0,300)
         self.sprite_group = sprite.Group()
-        self.input_handler = AudioInputHandler()
+        
         self.actor_state_machine = ActorStateMachine(self.actor)
-
         self.sprite_group.add(self.actor)
         for block in self.map.get_all_floor():
             self.sprite_group.add(block)
+
+        self.input_handler = ActorInputHandler()
 
     def bind(self,vector):
         if vector.x > int(config.width / 2):
@@ -113,9 +116,9 @@ class SceneGame(Scene):
             floor.show()
         self.actor.show()
         self.actor_state_machine.refresh()
-        key = query_key()
-        if key == PORT.ESC:
-            Singleton.get_instance().start_transition(scene_title.SceneTitle())
+        # key = query_key()
+        # if key == PORT.ESC:
+        #     Singleton.get_instance().start_transition(scene_title.SceneTitle())
 
 
     def show(self,screen:Surface):
@@ -141,7 +144,10 @@ class SceneGame(Scene):
         self.actor.physics(Vector2(0,-config.gravity))
 
         if self.actor.pos.y < -100:
-            Singleton.get_instance().start_transition(scene_title.SceneTitle())
+            if self.on_fail:
+                self.on_fail()
+            else:
+                Singleton.get_instance().start_transition(scene_title.SceneTitle())
 
     def event(self, events):
         # 需要持续监测的cmd
