@@ -1,70 +1,140 @@
-from actor import Actor
-from actor_input_handler import JumpCommand, MoveCommand, ThrustCommand
+from actor import COLOR_DOUBLE_JMP, COLOR_FIRE, COLOR_IDLE, COLOR_RED, COLOR_THRUST, Actor
+from actor_input_handler import JumpCommand, MoveCommand, PunchCommand, ThrustCommand
 from base.state import State,StateMachine
 from pygame import Vector2
 
 # 可以左右移动的状态，继承了普通的状态类
 class MovableState(State):
-    def handle_command(self, cmd, actor):
+    def __init__(self, name=None) -> None:
+        self.dir = 1
+
+    def refresh(self, actor:Actor):
+        pass 
+        
+    def handle_command(self, cmd, actor : Actor):
         if isinstance(cmd, MoveCommand):
-            x = cmd.x 
-            y = cmd.y
-            actor.pos += Vector2(x, y)
+            actor.set_vx(cmd.x)
+            if cmd.x != 0 :
+                self.dir = 1 if cmd.x > 0 else -1
         
 
 # 跳起来的状态，继承了可移动的状态
 class JumpState(MovableState):
     def __init__(self, name=None) -> None:
         super().__init__(name)
-        self.doubleJump = 1
+        self.force = 13
 
     def on_enter(self, actor:Actor):
-        self.startJump(actor)
+        if actor.allow_jmp_time != 0:
+            actor.set_color(COLOR_IDLE)
+        else:
+            actor.set_color(COLOR_DOUBLE_JMP)
 
-    def startJump(self, actor):
-        force = 4 
+        if actor.is_grounded:
+            self.startJump(actor, self.force)
+        else:
+            pass 
+
+    def startJump(self, actor, force):
         actor.set_vy(force)
 
     def refresh(self,actor:Actor):
         if actor.is_grounded:
             return GroundedState()
-            
+        
     def handle_command(self, cmd, actor: Actor):
-        super().handle_command(cmd, actor)
+        
         if isinstance(cmd, JumpCommand):
-            if self.doubleJump:
-                self.doubleJump = 0
-                self.startJump(actor)
+            if actor.allow_jmp_time > 0:
+                actor.allow_jmp_time = 0
+                self.startJump(actor, self.force * 0.6)
+                actor.set_color(COLOR_DOUBLE_JMP)
+
         elif isinstance(cmd, ThrustCommand):
-            return ThrustState()
+            if actor.allow_thrust_time > 0 :
+                actor.allow_thrust_time = 0
+                return ThrustState(self.dir)
+        
+        elif isinstance(cmd, PunchCommand):
+            return PunchPrepareState()
+        
+        return super().handle_command(cmd, actor)
             
 
 class ThrustState(State):
 
+    def __init__(self, dir, name=None) -> None:
+        super().__init__(name)
+        self.dir = 1 if dir > 0 else -1
+        self.vx = 20
+        self.fr = 0.9
+
+    def on_enter(self, actor:Actor):
+        actor.set_velocity(self.vx * self.dir , 0)
+        actor.set_color(COLOR_THRUST)
+
+    def refresh(self, actor:Actor):
+        vx = self.vx
+        if vx > 10:
+            vx -= self.fr
+            vx = max(vx, 0)
+            actor.set_velocity(vx * self.dir, 0)
+        else:
+            return JumpState()
+        self.vx = vx 
+
+    def handle_command(self, cmd, actor: Actor):
+        pass 
+
+class PunchState(State):
     def __init__(self, name=None) -> None:
         super().__init__(name)
 
-    def refresh(self, actor:Actor):
-        actor.set_vx(5)
-        actor.set_vy(0)
+    def on_enter(self, obj:Actor=None):
+        obj.set_velocity(0, -25)
 
-    def handle_command(self, cmd, actor: Actor):
-        return super().handle_command(cmd)
+
+    def refresh(self, obj:Actor):
+        if obj.is_grounded:
+            return PunchEndState()
+
+class PunchPrepareState(State):
+    def __init__(self, name=None) -> None:
+        self.frame_cnt = 15
+
+    def refresh(self, obj:Actor):
+        obj.set_velocity(0, 2)
+        obj.set_color(COLOR_RED)
+        if self.frame_cnt > 0:
+            self.frame_cnt -= 1
+        else:
+            return PunchState()
+
+class PunchEndState(State):
+    def __init__(self, name=None) -> None:
+        self.frame_cnt = 20
+
+    def refresh(self, obj:Actor):
+        obj.set_velocity(0, 0)
+        if self.frame_cnt > 0:
+            self.frame_cnt -= 1
+        else:
+            return GroundedState()
 
 # 在地面上的状态，继承了可移动的状态
 class GroundedState(MovableState):
-    # def handle_command(self, cmd, actor):
-    #     super().handle_command(cmd, actor)
+    def on_enter(self, obj=None):
+        assert(isinstance(obj, Actor))
+        obj.set_color(COLOR_IDLE)
 
     def refresh(self,actor:Actor):
         if not actor.is_grounded:
             return JumpState()
+        super().refresh(actor)
 
     def handle_command(self, cmd, actor):
-        # 保证在接收jumpCommand的过程中也可以移动，需要调用父类的handle函数
         super().handle_command(cmd, actor)
         if isinstance(cmd,JumpCommand):
-            cmd.execute(actor)
             return JumpState()
 
 # 状态机

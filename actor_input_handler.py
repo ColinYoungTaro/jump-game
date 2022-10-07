@@ -3,7 +3,7 @@ from actor import Actor
 from singleton import Singleton
 from pygame import Vector2
 from pygame import key
-from pygame.constants import K_LEFT, K_RIGHT, K_c, K_z
+from pygame.constants import K_LEFT, K_RIGHT, K_c, K_z, K_x
 from pygame.key import get_pressed
 from base.command import InputHandler,Command
 
@@ -21,15 +21,9 @@ class JumpCommand(Command):
 
     def execute(self,actor:Actor):
         pass 
-        # actor.set_vy(self.force)
 
 class ThrustCommand(Command):
-    def __init__(self):
-        self.force = 4
-    
-    def execute(self,actor:Actor):
-        # actor.set_vx(self.force)
-        pass 
+    pass 
 
 # 移动命令，构造函数包括移动的Δx和Δy
 class MoveCommand(Command):
@@ -38,9 +32,9 @@ class MoveCommand(Command):
         self.y = y
         super().__init__()
 
-    def execute(self, ctrl_obj):
-        actor : Actor = ctrl_obj
-        actor.pos += Vector2(self.x,self.y)
+
+class PunchCommand(Command):
+    pass 
 
 class ActorInputHandler(InputHandler):
     
@@ -52,6 +46,8 @@ class ActorInputHandler(InputHandler):
             return JumpCommand()
         elif key == K_z:
             return ThrustCommand()
+        elif key == K_x:
+            return PunchCommand()
         return None
 
     def update(self):
@@ -62,5 +58,6 @@ class ActorInputHandler(InputHandler):
            
         elif key_list[K_LEFT]:
             return MoveCommand(-5,0)
-
+        else:
+            return MoveCommand(0, 0)
 

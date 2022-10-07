@@ -162,9 +162,6 @@ class SceneGame(Scene):
             except:
                 import traceback;
                 traceback.print_exc()
-        else:
-            # cmd is null 
-            self.actor.set_vx(0)
 
         # 需要监测触发信号的cmd
         for event in events:

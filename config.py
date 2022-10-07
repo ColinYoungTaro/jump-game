@@ -2,7 +2,7 @@
 width = 480
 height = 320
 grid_width = 10
-gravity = 0.3
+gravity = 0.7
 
 volumn_threshold = {
     "low" : 500,

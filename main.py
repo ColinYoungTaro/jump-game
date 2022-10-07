@@ -22,7 +22,7 @@ class Game:
         self.width = config.width
         self.height = config.height
         self.size = self.width,self.height
-        self.fps = 60
+        self.fps = 50
         self.clock = Clock()
         # 程序的屏幕Surface对象
         # self.screen = pygame.display.set_mode(self.size,pygame.FULLSCREEN)

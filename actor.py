@@ -7,7 +7,11 @@ from base.game_object import gameObject
 import config
 from base.state import State,StateMachine
 
-COLOR_RED = (255,0,0)
+COLOR_IDLE = (30,144,255)
+COLOR_DOUBLE_JMP = (0, 0, 190)
+COLOR_THRUST = (255, 69, 0)
+COLOR_RED = (255, 0, 0)
+COLOR_FIRE = (190, 0, 0)
 
 class Actor(gameObject):
     # 初始化相关状态
@@ -22,18 +26,23 @@ class Actor(gameObject):
         self.image.set_colorkey((0,0,0))
         # 主体图像 
         # TODO:可以用图像替代
-        circle(self.image,COLOR_RED,(15,15),15)
-        circle(self.image,(255,255,255),(15+7,15-7),4)
+        self.color = COLOR_IDLE
+        self.set_color(self.color)
         self.rect = self.image.get_rect()
-        
 
+        self.init_allow()
+        self.dir = 1
+        
+    def init_allow(self):
+        self.allow_jmp_time = 1
+        self.allow_thrust_time = 1
 
     def show(self):
         self.rect.x = self.pos.x
         self.rect.y = config.height-self.pos.y-self.rect.height
 
     def physics(self,gravity):
-        self.pos += self.velocity
+        self.pos += self.velocity 
 
         if(not self.is_grounded):
             self.velocity += gravity
@@ -56,4 +65,9 @@ class Actor(gameObject):
         # print("grounded")
         self.is_grounded = True
         self.velocity = Vector2(0,0)
+        self.init_allow()
         
+    def set_color(self, color):
+        self.color = color
+        circle(self.image,color,(15,15),15)
+        circle(self.image,(255,255,255),(15+7,15-7),4)
